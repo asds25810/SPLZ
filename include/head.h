@@ -8,7 +8,7 @@
 using namespace std;
 
 #include <math.h>
-#define STEP 1000000
+int STEP=1000000;
 
 void PreProcess(int k);
 void PreProcess();
@@ -65,12 +65,10 @@ class Graph
 		int size_current;//当前压缩数据总大小  按sizeof(int)计
 		Graph();
 		Graph(char *filepath);
-		void LoadGraph(char *filepath);
-		void LoadRegion(char *filename);
-		void LoadCoordinate(char *filename);
-		void Segment(int k);
-		void Segment2(int k);
-		void Segment3(int k,int n);
+		int LoadGraph(char *filepath);
+		int LoadRegion(char *filename);
+		int LoadCoordinate(char *filename);
+		void Segment(int k,int max_iter,char* filename);
 		double evaluate();
 		void Dijkstra(int s,int *path,int *label);
 		void Dijkstra(int source,unsigned char *path,int *label,int *dist);

@@ -1,12 +1,10 @@
-
-
 #define INFINITY 2147483647
 //#define INFINITY_DOUBLE  
-#include "PriorityQueue.h"
-#include "head.h"
-#include <sys/io.h>
+#include "..\include\PriorityQueue.h"
+#include "..\include\head.h"
+#include <io.h>
 #include <hash_map>
-//using namespace stdext;
+
 Graph::Graph()
 {
 	size=0;
@@ -20,18 +18,18 @@ Graph::Graph(char *filepath)
 	size_current=0;
 	count_current=0;
 }
-void Graph::LoadGraph(char *filepath)//载入图信息
+int Graph::LoadGraph(char *filepath)//载入图信息
 {
-	//int n_arc;
 	int *maxdegree;
 	double sum_arc=0;
 	FILE *fp=fopen(filepath,"r");
 	if(!fp)
 	{
-		printf("graph data load fail！\n");
-		printf("%s\n",filepath);
+		printf("Error: cannot open the file: %s\n",filepath);
+		return 0;
 	}
 	char buf[200]={0};
+	//skip some information
 	fgets(buf,200,fp);
 	fgets(buf,200,fp);
 	fgets(buf,200,fp);
@@ -73,25 +71,30 @@ void Graph::LoadGraph(char *filepath)//载入图信息
 	//delete(maxdegree);
 	fclose(fp);
 
-
 	int max=0;
 	for(int i=1;i<size;i++)
 		if(maxdegree[i]>max)
 			max=maxdegree[i];
-	printf("载入完毕\n");
-	//printf("最大度数：%d\n",max);
-	//printf("平均边长：%f\n",sum_arc/n_arc);
+	printf("finish loading graph data\n");
+	if(max>15)
+		printf("Warning: the max degree of vertex in this graph is more than 15. SPLZ cannot calculate a correct result.\n");
 
-	//岔路分支数大于8时，进行分解
 	delete maxdegree;
 	size_current=0;
 	count_current=0;
+	return 1;
 }
 
-void Graph::LoadCoordinate(char *filename)//载入坐标信息
+int Graph::LoadCoordinate(char *filename)//载入坐标信息
 {
 	FILE *fp=fopen(filename,"r");
+	if(!fp)
+	{
+		printf("Error: cannot open the file: %s\n",filename);
+		return 0;
+	}
 	char buf[200]={0};
+	//skip some information
 	fgets(buf,200,fp);
 	fgets(buf,200,fp);
 	fgets(buf,200,fp);
@@ -121,6 +124,7 @@ void Graph::LoadCoordinate(char *filename)//载入坐标信息
 			y_south=y;
 	}
 	fclose(fp);
+	return 1;
 }
 
 void Graph::Dijkstra(int source,int *path,int *label)//普通dijkstra
@@ -157,12 +161,7 @@ void Graph::Dijkstra(int source,int *path,int *label)//普通dijkstra
                 {
                     Q.Adjust(hash[id_to]);
                 }
-				/*for(int j=0;j<nodes[id_to].degree;j++)
-					if(nodes[id_to].arcs[j].id_to==id)
-					{
-						path[id_to] = j;
-						break;
-					}*/
+
 				path[id_to] = id;//i;//
             }
 		}
@@ -250,37 +249,7 @@ inline double CalculateDistance(double x1,double x2,double y1,double y2)
 	return result;
 	//return (x1-x2)*(x1-x2)+(y1-y2)*(y1-y2);
 }
-/*
-struct str_hash //: hash_compare<unsigned char*>
-{
-	 enum   
-	 {   //   parameters   for   hash   table   
-		  bucket_size   =   4,   //   0   <   bucket_size   
-		  min_buckets   =   8  //   min_buckets   =   2   ^^   N,   0   <   N   
-	 };   
-    size_t operator()(unsigned char *ss) const
-    {
-           return size_t(ss[0]*0x1000000+ss[1]*0x10000+ss[2]*0x100+ss[3]*0x1);
-    }
-	bool operator()(unsigned char *s1,unsigned char *s2)const
-	{
-		return  s1[0]==s2[0]&&s1[1]==s2[1]&&s1[2]==s2[2]&&s1[3]==s2[3];
-	}
-};
-typedef hash_map<unsigned char*,vector<int>*,str_hash> fast_table;
-fast_table* creat_hash(unsigned char *dic,int length)
-{
-	fast_table *hm=new fast_table;
-	for(int i=0;i+4<length;i++)
-	{
-		if(hm->find(&dic[i])!=hm->end())
-			(*hm)[&dic[i]]=new vector<int>;
-		((*hm)[&dic[i]])->push_back(i);
-	}
 
-	return hm;
-}
-*/
 
 
 void Get_Order(vector<int> *order,int now,int *tree,bool *mark)
@@ -320,85 +289,287 @@ void Get_Order_BFS(vector<int> *order,int *tree,int size)
 	delete mark;
 	//delete children;
 }
-
-void Graph::Segment(int k)
+#define DIST(x1,x2,y1,y2) ((x1*1.0-x2)*(x1-x2)+(y1*1.0-y2)*(y1-y2))
+void Graph::Segment(int k,int n, char* filename)
 {
 	n_regions=k;
-	//读取排序数据
-	FILE *fp=fopen("E:\\GraphData\\importance.hcn","rb");
-	for(int i=0;i<size;i++)
-		fread(&nodes[i].importance,sizeof(int),1,fp);
-	fclose(fp);
-	//选择中心
-	vector<vertex> corner;
-	for(int i=1;i<size;i++)
-		corner.push_back(nodes[i]);
-	sort(corner.begin(),corner.end());
-	//是否需要输出中心信息到文件？
-	//求出每个结点所属区域
-	unsigned char *path=new unsigned char[size];            
-	int *dist=new int[size];
-	int *label=new int[size];//距离以跳数为准还是长度为准？
-	unsigned char *dest=new unsigned char[size];
-	int *buf=new int[size];//每个结点目前的最近距离
-	for(int i=0;i<size;i++)
-		buf[i]=0x7fffffff;
-	for(int i=0;i<n_regions;i++)
+	__int64 *sum_x=(__int64*)calloc(k,sizeof(__int64));//用于计算区域中心
+	__int64 *sum_y=(__int64*)calloc(k,sizeof(__int64));//用于计算区域中心
+	double sum=0;
+	double last=0;
+	int *count=new int[k];//区域大小计数
+	int *size_max=new int[k];
+	for(int i=0;i<k;i++)
+		size_max[i]=size/k;
+	for(int i=0;i<size%k;i++)
+		size_max[i]++;
+
+	regions=(region*)calloc(k,sizeof(region));
+	//random initial
+	int *center_x=new int[k];
+	int *center_y=new int[k];
+	for(int i=0;i<k;i++)
 	{
-		printf("划分区域%d\n",i);
-		Dijkstra(corner[i].id,path,label,dist);
-		for(int j=1;j<size;j++)
-			if(buf[j]>label[j])
+		center_x[i]=x_west+rand()%(x_east-x_west);
+		center_y[i]=y_south+rand()%(y_north-y_south);
+	}
+	bool flag=false;
+	for(int j=0;j<n;j++)//begin to iterate
+	{
+		//calculate which center a vertex belongs to
+		memset(count,0,sizeof(int)*k);
+		sum=0;
+		flag=false;
+		#pragma omp parallel for reduction(+: sum)
+		for(int i=1;i<size;i++)
+		{
+			double min_distance=DBL_MAX;
+			int center_index=0;
+			double dist=0;
+			for(int l=0;l<k;l++)
 			{
-				nodes[j].id_region=i;
-				buf[j]=label[j];
+				if(count[l]>=size_max[l]&&j<n/2)
+					continue;
+				//dist=CalculateDistance(nodes[i].x,center_x[l],nodes[i].y,center_y[l]);
+				dist=DIST(nodes[i].x,center_x[l],nodes[i].y,center_y[l]);
+				if(dist<min_distance)
+				{
+					min_distance=dist;
+					center_index=l;
+				}
 			}
-	}
-	regions=new region[k];
-	for(int i=1;i<size;i++)//区域内部初步编号
-	{
-		nodes[i].id_in_region=regions[nodes[i].id_region].nodes.size();
-		regions[nodes[i].id_region].nodes.push_back(i);
-	}
-	for(int i=0;i<k;i++)	
-	{
-		printf("设置代表元%d\n",i);
-		regions[i].size=regions[i].nodes.size();
-		//把代表元换到第一个
-		int tmp=regions[i].nodes[0];
-		regions[i].nodes[0]=regions[i].nodes[nodes[corner[i].id].id_in_region];
-		regions[i].nodes[nodes[corner[i].id].id_in_region]=tmp;
-		nodes[tmp].id_in_region=nodes[corner[i].id].id_in_region;
-		nodes[regions[i].nodes[0]].id_in_region=0;
+			sum+=sqrt(min_distance);
+			//_fpclass(sum)
+			nodes[i].id_region=center_index;
+			#pragma omp atomic
+			count[center_index]++;
+		}
+
+		//calculate the new center of each region
+		double max_move=0;
+		double t;
+		memset(sum_x,0,sizeof(__int64)*k);
+		memset(sum_y,0,sizeof(__int64)*k);
+		for(int i=1;i<size;i++)
+		{
+			sum_x[nodes[i].id_region]+=nodes[i].x;
+			sum_y[nodes[i].id_region]+=nodes[i].y;
+		}
+		for(int l=0;l<k;l++)
+		{
+			if(count[l]==0)//其实，出现这种情况的最好办法是删掉一个region
+			{
+				int seed=rand()%(size-1)+1;
+				center_x[l]=nodes[seed].x;//x_west+rand()%(x_east-x_west);
+				center_y[l]=nodes[seed].y;//y_south+rand()%(y_north-y_south);
+				if(!flag)
+				{
+					n++;
+					flag=true;
+				}
+				continue;
+			}
+			center_x[l]=sum_x[l]/count[l];
+			center_y[l]=sum_y[l]/count[l];
+		}
+		
+		printf("Partition iteration %d finish. log(sum of dist) is %f\n",j+1,log(sum+1));
+		if(fabs(log(sum+1)-last)<0.01)
+			break;
+		last=log(sum+1);
 	}
 
-	Reorder("E:\\GraphData\\regions_CH.txt");
-	/*fp=fopen("E:\\GraphData\\regions_CH.txt","w");
-	fprintf(fp,"%d\n",n_regions);
-	for(int i=0;i<n_regions;i++)
+	//count the number of vertices in each region
+	for(int i=0;i<k;i++)
 	{
-		fprintf(fp,"%d",regions[i].size);
-		for(int j=0;j<regions[i].size;j++)
-			fprintf(fp," %d",regions[i].nodes[j]);
-		fprintf(fp,"\n");
+		regions[i].nodes.resize(count[i]);//=new int[count[i]];
 	}
-	fclose(fp);*/
+	for(int i=1;i<size;i++)
+	{
+		nodes[i].id_in_region=regions[nodes[i].id_region].size;
+		regions[nodes[i].id_region].nodes[regions[nodes[i].id_region].size]=i;
+		regions[nodes[i].id_region].size++;
+	}
+
+	//select a representative vertex for every region
+	for(int i=0;i<k;i++)
+	{
+		/*if(regions[i].size==0)
+			printf("regions %d size==0\n",i);
+		if(regions[i].size<10)
+			printf("regions %d size==%d\n",i,regions[i].size);*/
+		int present;
+		double min_dist=DBL_MAX;
+		double dist;
+		for(int j=0;j<regions[i].size;j++)
+		{
+			if((dist=CalculateDistance(nodes[regions[i].nodes[j]].x,center_x[i],nodes[regions[i].nodes[j]].y,center_y[i]))<min_dist)
+			{
+				min_dist=dist;
+				present=j;
+			}
+		}
+		//set the representative vertex as the first vertex
+		int t;
+		t=regions[i].nodes[0];
+		regions[i].nodes[0]=regions[i].nodes[present];
+		regions[i].nodes[present]=t;
+		nodes[regions[i].nodes[0]].id_in_region=0;
+		nodes[regions[i].nodes[present]].id_in_region=present;
+
+	}
+
+	Reorder(filename);
+
+	printf("finish partitioning.\n");
+
+	delete count;
 }
 void Graph::Reorder(char *filename)
 {
-	unsigned char *path=new unsigned char[size];            
-	int *dist=new int[size];
-	int *label=new int[size];//距离以跳数为准还是长度为准？
+	FILE *tmp_dist=fopen("tmp_dist","wb");
+	FILE *tmp_path=fopen("tmp_path","wb");
+
+	int buf_size=200;
 	unsigned char *dest=new unsigned char[size];
 	vector<int> order;
+	//partition the graph by path-len
+	int *center=new int[n_regions];
+	for(int i=0;i<n_regions;i++)
+		center[i]=regions[i].nodes[0];
+	int **dist=new int*[buf_size];
+	unsigned char **path=new unsigned char*[buf_size];
+	for(int i=0;i<buf_size;i++)
+	{
+		dist[i]=new int[size];
+		path[i]=new unsigned char[size];
+	}
+	int k=0;
+
+	for(k=0;k<n_regions/buf_size;k++)
+	{
+		#pragma omp parallel for
+		for(int i=0;i<buf_size;i++)
+		{
+			int *label=new int[size];
+			Dijkstra(regions[k*buf_size+i].nodes[0],path[i],label,dist[i]);
+			printf("重新划分区域%d\n",k*buf_size+i);
+			delete label;
+		}
+		for(int i=0;i<buf_size;i++)
+		{
+			fwrite(dist[i],size,sizeof(int),tmp_dist);
+			fwrite(path[i],size,sizeof(unsigned char),tmp_path);
+		}
+	}
+	#pragma omp parallel for
+	for(int i=0;i<n_regions%buf_size;i++)
+	{
+		int *label=new int[size];
+		Dijkstra(regions[k*buf_size+i].nodes[0],path[i],label,dist[i]);
+		printf("重新划分区域%d\n",k*buf_size+i);
+		delete label;
+	}
+	for(int i=0;i<n_regions%buf_size;i++)
+	{
+		fwrite(dist[i],size,sizeof(int),tmp_dist);
+		fwrite(path[i],size,sizeof(unsigned char),tmp_path);
+	}
+	fclose(tmp_dist);
+	fclose(tmp_path);
+
+	tmp_dist=fopen("tmp_dist","rb");
+	double *min_distance=new double[size];
+	for(int i=0;i<size;i++)
+		min_distance[i]=DBL_MAX;
+	//计算每个结点归属的中心
+	int *count=new int[n_regions];
+	memset(count,0,sizeof(int)*n_regions);
+	for(k=0;k<n_regions/buf_size;k++)
+	{
+		for(int i=0;i<buf_size;i++)
+			fread(dist[i],size,sizeof(int),tmp_dist);
+		#pragma omp parallel for
+		for(int i=1;i<size;i++)
+		{
+			int center_index=nodes[i].id_region;
+			int d=0;
+			for(int l=0;l<buf_size;l++)
+			{
+				d=dist[l][i];
+				if(d<min_distance[i])
+				{
+					min_distance[i]=d;
+					center_index=k*buf_size+l;
+				}
+			}
+			nodes[i].id_region=center_index;
+		}
+	}
+	for(int i=0;i<n_regions%buf_size;i++)
+		fread(dist[i],size,sizeof(int),tmp_dist);
+	#pragma omp parallel for
+	for(int i=1;i<size;i++)
+	{
+		int center_index=nodes[i].id_region;
+		int d=0;
+		for(int l=0;l<n_regions%buf_size;l++)
+		{
+			d=dist[l][i];
+			if(d<min_distance[i])
+			{
+				min_distance[i]=d;
+				center_index=k*buf_size+l;
+			}
+		}
+		nodes[i].id_region=center_index;
+	}
+	fclose(tmp_dist);
+	for(int i=1;i<size;i++)
+		count[nodes[i].id_region]++;
+
+	//统计区域中包含的结点
+	memset(regions,0,sizeof(region)*n_regions);
+	for(int i=0;i<n_regions;i++)
+	{
+		regions[i].nodes.resize(count[i]);//=new int[count[i]];
+	}
+	for(int i=1;i<size;i++)
+	{
+		nodes[i].id_in_region=regions[nodes[i].id_region].size;
+		regions[nodes[i].id_region].nodes[regions[nodes[i].id_region].size]=i;
+		regions[nodes[i].id_region].size++;
+	}
+	//将代表元调整为区域中第一个元素
+	for(int i=0;i<n_regions;i++)
+	{
+		for(int k=0;k<regions[i].size;k++)
+			if(regions[i].nodes[k]==center[i])
+			{
+				printf("error!!!!!!!!!\n");
+				break;
+			}
+		int t;
+		t=regions[i].nodes[0];
+		regions[i].nodes[0]=regions[i].nodes[nodes[center[i]].id_in_region];
+		regions[i].nodes[nodes[center[i]].id_in_region]=t;
+		nodes[regions[i].nodes[0]].id_in_region=0;
+		nodes[regions[i].nodes[nodes[center[i]].id_in_region]].id_in_region=nodes[center[i]].id_in_region;
+	}
+
 	FILE *fp=fopen(filename,"w");
+	tmp_path=fopen("tmp_path","rb");
 	fprintf(fp,"%d\n",n_regions);
+
+	FILE *fp_order=fopen("order.txt","w");
+
 	for(int i=0;i<n_regions;i++)
 	{
 		printf("重新编号%d\n",i);
+		fread(path[0],size,sizeof(unsigned char),tmp_path);
 		order.clear();
 		//求根字典
-		Dijkstra(regions[i].nodes[0],path,label,dist);
+		//Dijkstra(regions[i].nodes[0],path,label,dist);
 		//求解压依赖树
 		int *tree=new int[regions[i].size];
 		//regions[i].data->depend_tree=tree;
@@ -409,46 +580,70 @@ void Graph::Reorder(char *filename)
 			int region=i;
 			for(int k=0;k<STEP&&tree[j]!=regions[i].nodes[0];k++)
 			{
-				tree[j]=nodes[tree[j]].arcs[path[tree[j]]].id_to;
+				tree[j]=nodes[tree[j]].arcs[path[0][tree[j]]].id_to;
 			}
 			int c=0;
 			while(nodes[tree[j]].id_region!=region)
 			{
+				c++;
+				tree[j]=nodes[tree[j]].arcs[path[0][tree[j]]].id_to;
+			}
+			if(c!=0)
+			{
 				printf("出界！！！！超出预定距离%d\n",++c);
-				tree[j]=nodes[tree[j]].arcs[path[tree[j]]].id_to;
 			}
 			tree[j]=nodes[tree[j]].id_in_region;
 		}
 		//区域内宽度优先重排
 		//宽度优先序
 		Get_Order_BFS(&order,tree,regions[i].size);
-
-		if(order.size()!=regions[i].size)
+		
+		vector<int> mapping;
+		mapping.resize(regions[i].size);
+		fprintf(fp_order,"%d",order.size());
+		for(int k=0;k<regions[i].size;k++)
+			mapping[order[k]]=k;
+		for(int k=0;k<regions[i].size;k++)
+			fprintf(fp_order," %d",mapping[tree[order[k]]]);
+		fprintf(fp_order,"\n");
+		for(int k=1;k<regions[i].size;k++)
 		{
-			printf("出错！！！！！！");
-			return;
+			if(mapping[tree[order[k]]]<mapping[tree[order[k-1]]])
+				printf("出错！！！！！！序列非增\n");
 		}
 		//排好之后输出到文件
-		
 		fprintf(fp,"%d",regions[i].size);
 		for(int l=0;l<regions[i].size;l++)
 		{
 			fprintf(fp," %d",regions[i].nodes[order[l]]);
 		}
 		fprintf(fp,"\n");
+		for(int l=0;l<regions[i].size;l++)
+		{
+			fprintf(fp," %d",mapping[tree[order[l]]]);
+		}
+		fprintf(fp,"\n");
 	}
+	fclose(fp_order);
 	fclose(fp);
+	fclose(tmp_path);
+	remove("tmp_dist");
+	remove("tmp_path");
 }
 		
-void Graph::LoadRegion(char *filename)
+int Graph::LoadRegion(char *filename)
 {
 	FILE *fp=fopen(filename,"r");
+	if(!fp)
+	{
+		printf("cannot open file: %s\n",filename);
+		return 0;
+	}
 	fscanf(fp,"%d",&n_regions);
 	regions=new region[n_regions];
 	memset(regions,0,sizeof(region)*n_regions);
 	for(int i=0;i<n_regions;i++)
 	{
-		//printf("载入区域信息%d\n",i);
 		fscanf(fp,"%d",&regions[i].size);
 		regions[i].nodes.resize(regions[i].size);
 		for(int j=0;j<regions[i].size;j++)
@@ -458,91 +653,20 @@ void Graph::LoadRegion(char *filename)
 			nodes[regions[i].nodes[j]].id_in_region=j;
 		}
 		
-		//用于存储压缩数据的空间
+		//allocate the memory for compressed data
 		regions[i].data=new DataBlock;
 		regions[i].data->id=i;
 		//regions[i].data->nodes=nodes;
 		regions[i].data->init(size,regions[i].size,size/2000*2+100);
 		regions[i].data->depend_tree=new int[regions[i].size];
-		//载入依赖树
+		//load the dependent tree
 		for(int j=0;j<regions[i].size;j++)
 		{
 			fscanf(fp,"%d",&regions[i].data->depend_tree[j]);
 		}
 	}
 	fclose(fp);
-
-	/*int sum=0;
-	for(int i=0;i<n_regions;i++)
-		sum+=regions[i].size;
-	printf("%d %d\n",size,sum);*/
-}
-
-void Graph::Get_Importance()
-{
-	char inputpath[100]="I:\\AllData1\\";
-	char index[20]={0};
-	char filename[100]={0};
-	unsigned char *path=new unsigned char[size];
-	int *dist=new int[size];
-	int *label=new int[size];
-	int i;
-	for(i=0;i<size/1000;i++)
-	{
-		//itoa(i,index,10);
-		sprintf(index,"%d",i);
-		strcpy(filename,inputpath);
-		strcat(filename,"sptree");
-		strcat(filename,index);
-		FILE *fp_tree=fopen(filename,"rb");
-		for(int j=0;j<1000;j++)
-		{
-			//Dijkstra(i*1000+j,path,label,dist);
-			fread(path,sizeof(unsigned char)*size,1,fp_tree);
-			for(int k=1;k<size;k++)
-			{
-				nodes[k].arcs[path[k]].importance++;
-				nodes[nodes[k].arcs[path[k]].id_to].importance++;
-			}
-			//if(j%100==0)
-			printf("已完成第%d个\n",i*1000+j+1);
-		}
-	}
-
-	if(size%1000!=0)
-	{
-		//itoa(i,index,10);
-		sprintf(index,"%d",i);
-		strcpy(filename,inputpath);
-		strcat(filename,"sptree");
-		strcat(filename,index);
-		FILE *fp_tree=fopen(filename,"rb");
-		for(int j=0;j<size%1000;j++)
-		{
-			//Dijkstra(i*1000+j,path,label,dist);
-			fread(path,sizeof(unsigned char)*size,1,fp_tree);
-			for(int k=1;k<size;k++)
-			{
-				nodes[k].arcs[path[k]].importance++;
-				nodes[nodes[k].arcs[path[k]].id_to].importance++;
-			}
-			//if(j%100==0)
-			printf("已完成第%d个\n",i*1000+j+1);
-		}
-	}
-	FILE *fp=fopen("E:\\GraphData\\importance.txt","w");
-	for(int i=0;i<size;i++)
-	{
-		if(i%1000==0)
-		printf("已完成%d\n",i);
-		fprintf(fp,"%d",nodes[i].importance);
-		for(int j=0;j<nodes[i].degree;j++)
-			fprintf(fp," %d",nodes[i].arcs[j].importance);
-		fprintf(fp,"\n");
-	}
-	fclose(fp);
-
-
+	return 1;
 }
 
 void Graph::Compress(char *dirpath,int a,int b)
@@ -560,8 +684,7 @@ void Graph::Compress(char *dirpath,int a,int b)
 	vector<int> order;
 			
 	double sum_unpack=0;
-	/*int a=0,b=0;
-	scanf("%d%d",&a,&b);*/
+
 	if(b>n_regions)
 		b=n_regions;
 	
@@ -570,15 +693,12 @@ void Graph::Compress(char *dirpath,int a,int b)
 		char filename[300]={0};
 		char b[20]={0};
 		sprintf(b,"%d",i);
-		//itoa(i,b,10);
 		strcpy(filename,dirpath);
 		strcat(filename,b);
-		//FILE *fp=fopen(filename,"rb");
 
 		if(access(filename, 0) == 0)
 		{
-			//fclose(fp);
-			printf("Process %d 跳过%d\n",omp_get_num_threads(),i);fflush(stdout);
+			printf("Thread %d skips region %d\n",omp_get_num_threads(),i);fflush(stdout);
 			continue;
 		}
 		order.clear();
@@ -590,27 +710,7 @@ void Graph::Compress(char *dirpath,int a,int b)
 		size_current+=record_size;
 		//求依赖关系树
 		int *tree=regions[i].data->depend_tree;//new int[regions[i].size];
-		//regions[i].data->depend_tree=tree;
-		/*tree[0]=0;
 
-		for(int j=1;j<regions[i].size;j++)
-		{
-			tree[j]=regions[i].nodes[j];
-			int region=i;
-			for(int k=0;k<STEP&&tree[j]!=regions[i].nodes[0];k++)//
-				tree[j]=nodes[tree[j]].arcs[tmp_dic[tree[j]]].id_to;
-			int cc=0;
-			while(nodes[tree[j]].id_region!=region)
-			{
-				cc++;
-				//printf("区域%d结点%d出界%d啦啦啦啦！！！！\n",i,j,cc);
-				tree[j]=nodes[tree[j]].arcs[tmp_dic[tree[j]]].id_to;
-			}
-			if(cc!=0)
-				printf("区域%d结点%d出界%d啦啦啦啦！！！！\n",i,j,cc);
-			tree[j]=nodes[tree[j]].id_in_region;
-		}
-		*/
 		int n_steps=0;
 		int dic_id=0;//当前作为字典的结点编号
 		tmp_dic=regions[i].data->dictionary;//当前字典串
@@ -622,66 +722,41 @@ void Graph::Compress(char *dirpath,int a,int b)
 			{
 				dic_id=tree[j];
 				//printf("Error: try to get a non-existent record %d, max is %d\n",tree[j],j);
-	
 				tmp_dic=regions[i].data->GetRecord(buf,tree[j],false,n_steps);//获得待压缩数据的依赖数据
 			}
-			//QueryPerformanceCounter( &begin );
+
 			Dijkstra(regions[i].nodes[j],path,label,dist);
-			//QueryPerformanceCounter( &end );
-			//totaltime = secondsPerTick * (end.QuadPart-begin.QuadPart);
-			//printf("Dijkstra时间=%fus\n",totaltime);
 
-
-			//QueryPerformanceCounter( &begin );
 			record_size=regions[i].data->AddRecord(tmp_dic,path);
-			//size_current+=record_size;
-			//QueryPerformanceCounter( &end );
-			//totaltime = secondsPerTick * (end.QuadPart-begin.QuadPart);
-			//printf("编码时间=%fus\n",totaltime);
 
-			//QueryPerformanceCounter( &begin );
 			unsigned char *result=regions[i].data->GetRecord(buf,j,false,n_steps);
-			//QueryPerformanceCounter( &end );
-			//totaltime = secondsPerTick * (end.QuadPart-begin.QuadPart);
-			//sum_unpack+=totaltime;
-			//printf("解码时间=%fus\n",totaltime);
 
 			if(memcmp(result,path,size)!=0)
 			{
 				printf("区域%d结点%d解码出错！！！！！！\n",i,j);
-				FILE *err=fopen("err.txt","w");
+				/*FILE *err=fopen("err.txt","w");
 				for(int xx=1;xx<size;xx++)
 					if(path[xx]!=result[xx])
 						fprintf(err,"%d %d %d\n",xx,path[xx],result[xx]);
-				fclose(err);
+				fclose(err);*/
 				system("pause");
-				/**/
-				//return;
 			}
-			if(j%10==0)
-			{
-				printf("region %d/%d node %d/%d finished.\n",i,n_regions-1,j,regions[i].size-1);
-
-				int size_raw=regions[i].data->size_raw;
-				int size_current=regions[i].data->size_current;
-				printf("区域压缩比:%.2f,单条记录压缩比：%.2f\n",1.0*(size_raw)/(size_current+size),1.0*size/(record_size+1));
-			}
-			fflush(stdout);
 		}
+		double compression_ratio=1.0*(regions[i].data->size_raw)/(regions[i].data->size_current+size);
+		printf("region %d has been compressed. compression ratio is %.2f\n",i,compression_ratio);
 		regions[i].data->Save(dirpath);
 		delete tree;
+		delete regions[i].data->index;
+		delete regions[i].data->records;
 		delete regions[i].data->dictionary;
 		delete regions[i].data;
-		//printf("%d\n",i);
 	}
 	delete path;
 	delete label;
 	delete dist;
 	delete buf[0];
 	delete buf[1];
-	
-	//printf("一共消耗时间：%f\n",sum_unpack);
-	//printf("平均解压时间：%f\n",sum_unpack/sum);
+
 }
 
 void Graph::Decompress_prepare(char *dirpath,bool exMemory)
@@ -711,101 +786,4 @@ double Graph::evaluate()//评估区域划分效果
 	return log(sum);
 }
 
-void Graph::BFM(int source,unsigned char *path,int *label)
-{
-	bool *mark=new bool[size];
-	int *tmp_path=new int[size];
-	queue<int> Q;
-	memset(mark,0,sizeof(bool)*size);
-	//memset(label,0,size*sizeof(int));
-	for(int i=0;i<size;i++)
-		label[i]=0x7fffffff;
-	//memset(tmp_path,0,size*sizeof(int));
-	
-	label[source]=0;
-	Q.push(source);
-	mark[source]=true;
-	while(!Q.empty())
-	{
-		int u=Q.front();
-		Q.pop();
-		mark[u]=false;
-		for(int i=0;i<nodes[u].degree;i++)
-		{
-			int id_to=nodes[u].arcs[i].id_to;
-			if(label[u]+nodes[u].arcs[i].weight<label[id_to])
-			{
-				tmp_path[id_to]=u;
-				if(!mark[id_to])
-				{
-					Q.push(id_to);
-					mark[id_to]=true;
-				}
-			}
-		}
-	}
-	for(int i=1;i<size;i++)
-		for(int j=0;j<nodes[i].degree;j++)
-			if(nodes[i].arcs[j].id_to=tmp_path[i])
-			{
-				path[i]=j;
-				break;
-			}
-	path[0]=0;
-	delete mark;
-	delete tmp_path;
-}
 
-int Graph::Astar(int source,int target,int *path,int *label,double epsilon)
-{
-	int id=source;
-	int count_searched=0;
-	int *hash=new int[size];
-	int *weight=new int[size];//weight指示source到当前结点的最短距离
-	bool *mark=(bool*)calloc(size,sizeof(bool));
-	for (int i = 0; i < size; i++)
-    {
-        hash[i] = -1;
-		//label[i]=INFINITY;
-    }
-	memset(label,0,size*sizeof(int));
-	PriorityQueue Q(1000,label,hash);
-
-	path[0]=0;
-	path[source]=source;
-    label[source] = 0;
-    while(id!=target)
-    {   
-		for (int i=0;i<nodes[id].degree;i++)
-		{
-			int id_to=nodes[id].arcs[i].id_to;
-			if (!mark[id_to])// weight[id] + nodes[id].arcs[i].weight < label[nodes[id].arcs[i].id_to])
-            {
-				double estimation=CalculateDistance(nodes[id_to].x,nodes[target].x,nodes[id_to].y,nodes[target].y);
-				if(label[id_to] == 0 || weight[id] + nodes[id].arcs[i].weight + epsilon * estimation < label[id_to])
-				{
-					weight[id_to]=weight[id] + nodes[id].arcs[i].weight;
-					label[id_to] = weight[nodes[id].arcs[i].id_to] + epsilon * estimation;
-					if (hash[id_to] == -1)
-					{
-						Q.Push(id_to);
-					}
-					else
-					{
-						Q.Adjust(hash[id_to]);
-					}
-					path[id_to] = id;
-				}
-            }
-		}
-		count_searched++;
-		mark[id]=true;
-        id = Q.Top();
-        Q.Pop();
-    }
-	path[source]=weight[target];
-	delete hash;
-	delete weight;
-	delete mark;
-	return count_searched;
-}

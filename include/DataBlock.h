@@ -5,8 +5,8 @@
 #include <omp.h>
 
 
-#define NUMBER_OF_SEGMENTS 64
-#define NUMBER_OF_THREADS 64
+#define NUMBER_OF_SEGMENTS 256
+#define NUMBER_OF_THREADS 256
 #define DECODE_CHECK 1
 typedef int record_for_mt[NUMBER_OF_SEGMENTS+1];
 
