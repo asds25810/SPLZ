@@ -21,7 +21,8 @@ It needs too much time to pre-computing, unless you have a high performance work
 
 Command format
 ===========
-Note:	
+Note:
+	
 	1.you must input all the parameters mentioned below.
 	2.examples of commands are included in ~\x64\Release\
 			
