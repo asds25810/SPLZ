@@ -8,33 +8,33 @@
 
 int main(int argc, char **argv)
 {
-	if(argc!=5)
+	if(argc!=6)
 	{
 		printf("Error: partition needs 5 parameters.\n");
 		return 0;
 	}
-	int C=atoi(argv[2]);
+	int C=atoi(argv[3]);
 	if(C<=0)
 	{
 		printf("Error: parameter C must be a positive integer.\n");
 		return 0;
 	}
-	int len_to_dict=atoi(argv[3]);
+	int len_to_dict=atoi(argv[4]);
 	if(len_to_dict<=0)
 		len_to_dict=1000000;
 	STEP=len_to_dict;
 
 	Graph graph;
-	if(!graph.LoadGraph(argv[0]))
+	if(!graph.LoadGraph(argv[1]))
 	{
 		printf("Error: fail to load graph data.\n");
 		return 0;
 	}
-	if(!graph.LoadCoordinate(argv[1]))
+	if(!graph.LoadCoordinate(argv[2]))
 	{
 		printf("Error: fail to load coordinate data.\n");
 		return 0;
 	}
-	graph.Segment((int)sqrt((double)graph.size)*C,25,argv[4]);	
+	graph.Segment((int)sqrt((double)graph.size)*C,25,argv[5]);	
 	return 0;
 }

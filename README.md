@@ -3,6 +3,7 @@ SPLZ
 SPLZ is a fast algorithm for single source shortest path problem on large-scale road network
 
 This program is an implement of SPLZ algorithm. It consist of three parts:
+
 	1). Graph partitioning.
 	2). Compressing the all-pair shortest path of a road network.
 	3). Decompressing a particular shortest path tree.
@@ -23,8 +24,8 @@ Command format
 ===========
 Note:
 	
-	1.you must input all the parameters mentioned below.
-	2.examples of commands are included in ~\x64\Release\
+	1.You must input all the parameters mentioned below.
+	2.Examples of commands are included in ~\x64\Release\
 			
 1).partition
 SPLZ_partition.exe	gr_in co_in C len-to-dict regions_out

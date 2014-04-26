@@ -37,7 +37,7 @@ int Graph::LoadGraph(char *filepath)//载入图信息
 	fscanf(fp,"p sp %d%d\n",&size,&n_arc);
 	fgets(buf,200,fp);
 	fgets(buf,200,fp);
-	printf("%d\n",size);
+	printf("This graph has %d vertices\n",size);
 	size++;
 	nodes=(vertex*)malloc(sizeof(vertex)*(size));
 	maxdegree=new int[size];
@@ -453,7 +453,7 @@ void Graph::Reorder(char *filename)
 		{
 			int *label=new int[size];
 			Dijkstra(regions[k*buf_size+i].nodes[0],path[i],label,dist[i]);
-			printf("重新划分区域%d\n",k*buf_size+i);
+			printf("repartition the region %d\n",k*buf_size+i);
 			delete label;
 		}
 		for(int i=0;i<buf_size;i++)
@@ -467,7 +467,7 @@ void Graph::Reorder(char *filename)
 	{
 		int *label=new int[size];
 		Dijkstra(regions[k*buf_size+i].nodes[0],path[i],label,dist[i]);
-		printf("重新划分区域%d\n",k*buf_size+i);
+		printf("repartition the region %d\n",k*buf_size+i);
 		delete label;
 	}
 	for(int i=0;i<n_regions%buf_size;i++)
@@ -565,7 +565,7 @@ void Graph::Reorder(char *filename)
 
 	for(int i=0;i<n_regions;i++)
 	{
-		printf("重新编号%d\n",i);
+		printf("reorder the region %d\n",i);
 		fread(path[0],size,sizeof(unsigned char),tmp_path);
 		order.clear();
 		//求根字典
@@ -590,7 +590,7 @@ void Graph::Reorder(char *filename)
 			}
 			if(c!=0)
 			{
-				printf("出界！！！！超出预定距离%d\n",++c);
+				//printf("出界！！！！超出预定距离%d\n",++c);
 			}
 			tree[j]=nodes[tree[j]].id_in_region;
 		}
@@ -603,13 +603,13 @@ void Graph::Reorder(char *filename)
 		fprintf(fp_order,"%d",order.size());
 		for(int k=0;k<regions[i].size;k++)
 			mapping[order[k]]=k;
-		for(int k=0;k<regions[i].size;k++)
+		/*for(int k=0;k<regions[i].size;k++)
 			fprintf(fp_order," %d",mapping[tree[order[k]]]);
-		fprintf(fp_order,"\n");
+		fprintf(fp_order,"\n");*/
 		for(int k=1;k<regions[i].size;k++)
 		{
 			if(mapping[tree[order[k]]]<mapping[tree[order[k-1]]])
-				printf("出错！！！！！！序列非增\n");
+				printf("Error: the sequence of dependence is Non-monotonic\n");
 		}
 		//排好之后输出到文件
 		fprintf(fp,"%d",regions[i].size);
