@@ -1,9 +1,89 @@
-﻿生成启动时间为 2014/4/26 21:14:46。
-     1>项目“C:\Users\Administrator.USER-MHBOIEG034\documents\visual studio 2010\Projects\SPLZ\SPLZ_decompress_test\SPLZ_decompress_test.vcxproj”在节点 2 上(clean 个目标)。
-     1>_PrepareForClean:
-         正在删除文件“x64\Release\SPLZ_decompress_test.lastbuildstate”。
-     1>已完成生成项目“C:\Users\Administrator.USER-MHBOIEG034\documents\visual studio 2010\Projects\SPLZ\SPLZ_decompress_test\SPLZ_decompress_test.vcxproj”(clean 个目标)的操作。
+﻿生成启动时间为 2014/9/11 11:01:02。
+     1>项目“C:\Users\Administrator.USER-MHBOIEG034\documents\visual studio 2010\Projects\SPLZ\SPLZ_decompress_test\SPLZ_decompress_test.vcxproj”在节点 2 上(build 个目标)。
+     1>InitializeBuildStatus:
+         正在创建“x64\Release\SPLZ_decompress_test.unsuccessfulbuild”，因为已指定“AlwaysCreate”。
+       ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\x86_amd64\CL.exe /c /Zi /nologo /W3 /WX- /O2 /Oi /GL /D WIN32 /D NDEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /openmp /Fo"x64\Release\\" /Fd"x64\Release\vc100.pdb" /Gd /TP /errorReport:prompt SPLZ_decompress_test.cpp
+         SPLZ_decompress_test.cpp
+     1>c:\users\administrator.user-mhboieg034\documents\visual studio 2010\projects\splz\include\..\include\PriorityQueue.h(52): warning C4101: “z”: 未引用的局部变量
+     1>c:\users\administrator.user-mhboieg034\documents\visual studio 2010\projects\splz\include\DataBlock.h(56): warning C4244: “=”: 从“double”转换到“int”，可能丢失数据
+     1>c:\users\administrator.user-mhboieg034\documents\visual studio 2010\projects\splz\include\DataBlock.h(162): warning C4244: “初始化”: 从“double”转换到“int”，可能丢失数据
+     1>c:\users\administrator.user-mhboieg034\documents\visual studio 2010\projects\splz\include\DataBlock.h(398): warning C4244: “初始化”: 从“double”转换到“int”，可能丢失数据
+     1>c:\users\administrator.user-mhboieg034\documents\visual studio 2010\projects\splz\include\DataBlock.h(417): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\stdio.h(371) : 参见“sprintf”的声明
+     1>c:\users\administrator.user-mhboieg034\documents\visual studio 2010\projects\splz\include\DataBlock.h(419): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\string.h(105) : 参见“strcpy”的声明
+     1>c:\users\administrator.user-mhboieg034\documents\visual studio 2010\projects\splz\include\DataBlock.h(420): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\string.h(110) : 参见“strcat”的声明
+     1>c:\users\administrator.user-mhboieg034\documents\visual studio 2010\projects\splz\include\DataBlock.h(421): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\stdio.h(234) : 参见“fopen”的声明
+     1>c:\users\administrator.user-mhboieg034\documents\visual studio 2010\projects\splz\include\DataBlock.h(435): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\stdio.h(371) : 参见“sprintf”的声明
+     1>c:\users\administrator.user-mhboieg034\documents\visual studio 2010\projects\splz\include\DataBlock.h(437): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\string.h(105) : 参见“strcpy”的声明
+     1>c:\users\administrator.user-mhboieg034\documents\visual studio 2010\projects\splz\include\DataBlock.h(438): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\string.h(110) : 参见“strcat”的声明
+     1>c:\users\administrator.user-mhboieg034\documents\visual studio 2010\projects\splz\include\DataBlock.h(439): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\stdio.h(234) : 参见“fopen”的声明
+     1>c:\users\administrator.user-mhboieg034\documents\visual studio 2010\projects\splz\include\DataBlock.h(459): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\stdio.h(234) : 参见“fopen”的声明
+     1>c:\users\administrator.user-mhboieg034\documents\visual studio 2010\projects\splz\splz_decompress_test\..\include\Graph.h(25): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\stdio.h(234) : 参见“fopen”的声明
+     1>c:\users\administrator.user-mhboieg034\documents\visual studio 2010\projects\splz\splz_decompress_test\..\include\Graph.h(37): warning C4996: 'fscanf': This function or variable may be unsafe. Consider using fscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\stdio.h(253) : 参见“fscanf”的声明
+     1>c:\users\administrator.user-mhboieg034\documents\visual studio 2010\projects\splz\splz_decompress_test\..\include\Graph.h(52): warning C4996: 'fscanf': This function or variable may be unsafe. Consider using fscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\stdio.h(253) : 参见“fscanf”的声明
+     1>c:\users\administrator.user-mhboieg034\documents\visual studio 2010\projects\splz\splz_decompress_test\..\include\Graph.h(90): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\stdio.h(234) : 参见“fopen”的声明
+     1>c:\users\administrator.user-mhboieg034\documents\visual studio 2010\projects\splz\splz_decompress_test\..\include\Graph.h(114): warning C4996: 'fscanf': This function or variable may be unsafe. Consider using fscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\stdio.h(253) : 参见“fscanf”的声明
+     1>c:\users\administrator.user-mhboieg034\documents\visual studio 2010\projects\splz\splz_decompress_test\..\include\Graph.h(372): warning C4244: “=”: 从“__int64”转换到“int”，可能丢失数据
+     1>c:\users\administrator.user-mhboieg034\documents\visual studio 2010\projects\splz\splz_decompress_test\..\include\Graph.h(373): warning C4244: “=”: 从“__int64”转换到“int”，可能丢失数据
+     1>c:\users\administrator.user-mhboieg034\documents\visual studio 2010\projects\splz\splz_decompress_test\..\include\Graph.h(350): warning C4101: “t”: 未引用的局部变量
+     1>c:\users\administrator.user-mhboieg034\documents\visual studio 2010\projects\splz\splz_decompress_test\..\include\Graph.h(430): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\stdio.h(234) : 参见“fopen”的声明
+     1>c:\users\administrator.user-mhboieg034\documents\visual studio 2010\projects\splz\splz_decompress_test\..\include\Graph.h(431): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\stdio.h(234) : 参见“fopen”的声明
+     1>c:\users\administrator.user-mhboieg034\documents\visual studio 2010\projects\splz\splz_decompress_test\..\include\Graph.h(481): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\stdio.h(234) : 参见“fopen”的声明
+     1>c:\users\administrator.user-mhboieg034\documents\visual studio 2010\projects\splz\splz_decompress_test\..\include\Graph.h(560): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\stdio.h(234) : 参见“fopen”的声明
+     1>c:\users\administrator.user-mhboieg034\documents\visual studio 2010\projects\splz\splz_decompress_test\..\include\Graph.h(561): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\stdio.h(234) : 参见“fopen”的声明
+     1>c:\users\administrator.user-mhboieg034\documents\visual studio 2010\projects\splz\splz_decompress_test\..\include\Graph.h(564): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\stdio.h(234) : 参见“fopen”的声明
+     1>c:\users\administrator.user-mhboieg034\documents\visual studio 2010\projects\splz\splz_decompress_test\..\include\Graph.h(636): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\stdio.h(234) : 参见“fopen”的声明
+     1>c:\users\administrator.user-mhboieg034\documents\visual studio 2010\projects\splz\splz_decompress_test\..\include\Graph.h(642): warning C4996: 'fscanf': This function or variable may be unsafe. Consider using fscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\stdio.h(253) : 参见“fscanf”的声明
+     1>c:\users\administrator.user-mhboieg034\documents\visual studio 2010\projects\splz\splz_decompress_test\..\include\Graph.h(647): warning C4996: 'fscanf': This function or variable may be unsafe. Consider using fscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\stdio.h(253) : 参见“fscanf”的声明
+     1>c:\users\administrator.user-mhboieg034\documents\visual studio 2010\projects\splz\splz_decompress_test\..\include\Graph.h(651): warning C4996: 'fscanf': This function or variable may be unsafe. Consider using fscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\stdio.h(253) : 参见“fscanf”的声明
+     1>c:\users\administrator.user-mhboieg034\documents\visual studio 2010\projects\splz\splz_decompress_test\..\include\Graph.h(665): warning C4996: 'fscanf': This function or variable may be unsafe. Consider using fscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\stdio.h(253) : 参见“fscanf”的声明
+     1>c:\users\administrator.user-mhboieg034\documents\visual studio 2010\projects\splz\splz_decompress_test\..\include\Graph.h(695): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\stdio.h(371) : 参见“sprintf”的声明
+     1>c:\users\administrator.user-mhboieg034\documents\visual studio 2010\projects\splz\splz_decompress_test\..\include\Graph.h(696): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\string.h(105) : 参见“strcpy”的声明
+     1>c:\users\administrator.user-mhboieg034\documents\visual studio 2010\projects\splz\splz_decompress_test\..\include\Graph.h(697): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\string.h(110) : 参见“strcat”的声明
+     1>c:\users\administrator.user-mhboieg034\documents\visual studio 2010\projects\splz\splz_decompress_test\..\include\Graph.h(699): warning C4996: 'access': The POSIX name for this item is deprecated. Instead, use the ISO C++ conformant name: _access. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\io.h(299) : 参见“access”的声明
+     1>c:\users\administrator.user-mhboieg034\documents\visual studio 2010\projects\splz\splz_decompress_test\..\include\Graph.h(750): warning C4156: 未使用数组形式的“delete”删除数组表达式；数组形式被替代
+     1>SPLZ_decompress_test.cpp(17): warning C4244: “参数”: 从“time_t”转换到“unsigned int”，可能丢失数据
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\x86_amd64\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Administrator.USER-MHBOIEG034\documents\visual studio 2010\Projects\SPLZ\x64\Release\SPLZ_decompress_test.exe" /INCREMENTAL:NO /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"x64\Release\SPLZ_decompress_test.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"C:\Users\Administrator.USER-MHBOIEG034\documents\visual studio 2010\Projects\SPLZ\x64\Release\SPLZ_decompress_test.pdb" /SUBSYSTEM:CONSOLE /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Administrator.USER-MHBOIEG034\documents\visual studio 2010\Projects\SPLZ\x64\Release\SPLZ_decompress_test.lib" /MACHINE:X64 x64\Release\SPLZ_decompress_test.obj
+         正在生成代码
+         已完成代码的生成
+         SPLZ_decompress_test.vcxproj -> C:\Users\Administrator.USER-MHBOIEG034\documents\visual studio 2010\Projects\SPLZ\x64\Release\SPLZ_decompress_test.exe
+       Manifest:
+         C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\mt.exe /nologo /verbose /outputresource:"C:\Users\Administrator.USER-MHBOIEG034\documents\visual studio 2010\Projects\SPLZ\x64\Release\SPLZ_decompress_test.exe;#1" /manifest x64\Release\SPLZ_decompress_test.exe.intermediate.manifest
+       FinalizeBuildStatus:
+         正在删除文件“x64\Release\SPLZ_decompress_test.unsuccessfulbuild”。
+         正在对“x64\Release\SPLZ_decompress_test.lastbuildstate”执行 Touch 任务。
+     1>已完成生成项目“C:\Users\Administrator.USER-MHBOIEG034\documents\visual studio 2010\Projects\SPLZ\SPLZ_decompress_test\SPLZ_decompress_test.vcxproj”(build 个目标)的操作。
 
 生成成功。
 
-已用时间 00:00:00.00
+已用时间 00:00:00.80

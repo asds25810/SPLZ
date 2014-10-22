@@ -292,7 +292,7 @@ void Get_Order_BFS(vector<int> *order,int *tree,int size)
 #define DIST(x1,x2,y1,y2) ((x1*1.0-x2)*(x1-x2)+(y1*1.0-y2)*(y1-y2))
 void Graph::Segment(int k,int n, char* filename)
 {
-	n_regions=k;
+	n_regions=k;//区域数
 	__int64 *sum_x=(__int64*)calloc(k,sizeof(__int64));//用于计算区域中心
 	__int64 *sum_y=(__int64*)calloc(k,sizeof(__int64));//用于计算区域中心
 	double sum=0;
@@ -320,18 +320,18 @@ void Graph::Segment(int k,int n, char* filename)
 		memset(count,0,sizeof(int)*k);
 		sum=0;
 		flag=false;
-		#pragma omp parallel for reduction(+: sum)
-		for(int i=1;i<size;i++)
+		#pragma omp parallel for reduction(+: sum)//
+		for(int i=1;i<size;i++)//size是点集总大小
 		{
 			double min_distance=DBL_MAX;
 			int center_index=0;
 			double dist=0;
-			for(int l=0;l<k;l++)
+			for(int l=0;l<k;l++)//找出k个区域中心里到自己距离最近的
 			{
 				if(count[l]>=size_max[l]&&j<n/2)
 					continue;
 				//dist=CalculateDistance(nodes[i].x,center_x[l],nodes[i].y,center_y[l]);
-				dist=DIST(nodes[i].x,center_x[l],nodes[i].y,center_y[l]);
+				dist=DIST(nodes[i].x,center_x[l],nodes[i].y,center_y[l]);//欧氏距离
 				if(dist<min_distance)
 				{
 					min_distance=dist;
@@ -342,10 +342,10 @@ void Graph::Segment(int k,int n, char* filename)
 			//_fpclass(sum)
 			nodes[i].id_region=center_index;
 			#pragma omp atomic
-			count[center_index]++;
+			count[center_index]++;//该区域新增了一个点，计数+1
 		}
 
-		//calculate the new center of each region
+		//calculate the new center of each region,即求重心
 		double max_move=0;
 		double t;
 		memset(sum_x,0,sizeof(__int64)*k);
@@ -357,7 +357,7 @@ void Graph::Segment(int k,int n, char* filename)
 		}
 		for(int l=0;l<k;l++)
 		{
-			if(count[l]==0)//其实，出现这种情况的最好办法是删掉一个region
+			if(count[l]==0)//当某个区域点数为0，进行一些处理。其实，出现这种情况的最好办法是删掉一个region
 			{
 				int seed=rand()%(size-1)+1;
 				center_x[l]=nodes[seed].x;//x_west+rand()%(x_east-x_west);
@@ -768,22 +768,5 @@ void Graph::Decompress_prepare(char *dirpath,bool exMemory)
 	}
 }
 
-double Graph::evaluate()//评估区域划分效果
-{
-	double sum=0;
-	unsigned char *path=new unsigned char[size];
-	int *dist=new int[size];
-	int *label=new int[size];
-	
-	for(int i=0;i<n_regions;i++)
-	{
-		Dijkstra(regions[i].nodes[0],path,label,dist);
-		for(int j=1;j<regions[i].size;j++)
-			sum+=dist[regions[i].nodes[j]]; //CalculateDistance(nodes[regions[i].nodes[0]].x,nodes[regions[i].nodes[j]].x,nodes[regions[i].nodes[0]].y,nodes[regions[i].nodes[j]].y);
-		printf("正在计算区域%d的距离和\n",i);
-	}
-	//printf("结点到中心的距离和为：%f\n",log(sum));
-	return log(sum);
-}
 
 

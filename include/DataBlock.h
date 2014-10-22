@@ -5,8 +5,8 @@
 #include <omp.h>
 
 
-#define NUMBER_OF_SEGMENTS 256
-#define NUMBER_OF_THREADS 256
+#define NUMBER_OF_SEGMENTS 64
+#define NUMBER_OF_THREADS 64
 #define DECODE_CHECK 1
 typedef int record_for_mt[NUMBER_OF_SEGMENTS+1];
 
@@ -396,7 +396,7 @@ inline void DataBlock::Decode(unsigned char *dictionary,unsigned char *dest,unsi
 void DataBlock::Decode_MT(unsigned char *dictionary,unsigned char *dest,unsigned char *source,int length_source,int length_dest,record_for_mt record)
 {
 	int length_segment=ceil((double)(length_dest/NUMBER_OF_SEGMENTS))+1;
-	//#pragma omp parallel for
+	//#pragma omp parallel for schedule(dynamic) num_threads(4) 
 	for(int i=0;i<NUMBER_OF_THREADS;i++)
 	{
 		int begin=-1+length_segment*i<0?0:-1+length_segment*i;
@@ -405,6 +405,7 @@ void DataBlock::Decode_MT(unsigned char *dictionary,unsigned char *dest,unsigned
 			l=length_segment-1;
 		if(i==NUMBER_OF_THREADS-1)
 			l=length_dest-length_segment*(NUMBER_OF_THREADS-1)+1;
+		
 		Decode(dictionary,&dest[begin],&source[record[i]],record[i+1]-record[i]);
 	}
 }
